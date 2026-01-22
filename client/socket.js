@@ -1,4 +1,4 @@
-const socket = io("YOUR_RENDER_BACKEND_URL");
+const socket = io("https://mini-golf-88v0.onrender.com");
 
 let myId = null;
 
