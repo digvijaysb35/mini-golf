@@ -35,17 +35,30 @@ io.on("connection", socket => {
   });
 
   socket.on("shoot", data => {
-    const room = rooms[data.roomId];
-    if (!room) return;
-    if (room.players[room.turn].id !== socket.id) return;
+  const room = rooms[data.roomId];
+  if (!room) return;
 
-    io.to(data.roomId).emit("ballUpdate", data);
+  const current = room.players[room.turn];
+  if (current.id !== socket.id) return;
+
+  // count shot
+  current.shots = (current.shots || 0) + 1;
+
+  // send velocity
+  io.to(data.roomId).emit("ballUpdate", {
+    vx: data.vx,
+    vy: data.vy
+  });
+
+  // move turn after short delay (ball stops)
+  setTimeout(() => {
     room.turn = (room.turn + 1) % room.players.length;
     io.to(data.roomId).emit(
       "turnUpdate",
       room.players[room.turn].id
     );
-  });
+  }, 1200);
+});
 
 });
 
