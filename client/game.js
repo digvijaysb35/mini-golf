@@ -1,14 +1,18 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-let ball = { x: 150, y: 100, vx: 0, vy: 0 };
+let ball = { x: 150, y: 100, vx: 0, vy: 0, r: 8 };
 let myTurn = false;
 
+let aiming = false;
+let aimStart = null;
+let aimEnd = null;
+
 function startRound(data) {
-  lobby.classList.add("hidden");
   canvas.classList.remove("hidden");
   ball.x = data.map.start.x;
   ball.y = data.map.start.y;
+  ball.vx = ball.vy = 0;
 }
 
 function updateTurn(id) {
@@ -16,9 +20,33 @@ function updateTurn(id) {
   turnInfo.innerText = myTurn ? "Your Turn" : "Waiting...";
 }
 
-canvas.addEventListener("touchend", e => {
+canvas.addEventListener("touchstart", e => {
   if (!myTurn) return;
-  socket.emit("shoot", { roomId, vx: 3, vy: 5 });
+  const t = e.touches[0];
+  aiming = true;
+  aimStart = { x: t.clientX - canvas.offsetLeft, y: t.clientY - canvas.offsetTop };
+});
+
+canvas.addEventListener("touchmove", e => {
+  if (!aiming) return;
+  const t = e.touches[0];
+  aimEnd = { x: t.clientX - canvas.offsetLeft, y: t.clientY - canvas.offsetTop };
+});
+
+canvas.addEventListener("touchend", () => {
+  if (!aiming || !aimEnd) return;
+
+  const dx = aimStart.x - aimEnd.x;
+  const dy = aimStart.y - aimEnd.y;
+
+  socket.emit("shoot", {
+    roomId,
+    vx: dx * 0.1,
+    vy: dy * 0.1
+  });
+
+  aiming = false;
+  aimStart = aimEnd = null;
 });
 
 socket.on("ballUpdate", data => {
@@ -34,9 +62,25 @@ function update() {
 }
 
 function draw() {
-  ctx.clearRect(0,0,300,600);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // golf area
+  ctx.fillStyle = "#7cb342";
+  ctx.fillRect(40, 20, 220, 560);
+
+  // aiming line
+  if (aiming && aimEnd) {
+    ctx.strokeStyle = "white";
+    ctx.beginPath();
+    ctx.moveTo(ball.x, ball.y);
+    ctx.lineTo(aimEnd.x, aimEnd.y);
+    ctx.stroke();
+  }
+
+  // ball
+  ctx.fillStyle = "black";
   ctx.beginPath();
-  ctx.arc(ball.x, ball.y, 8, 0, Math.PI*2);
+  ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
   ctx.fill();
 }
 
