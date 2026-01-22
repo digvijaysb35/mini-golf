@@ -59,6 +59,17 @@ function update() {
   ball.y += ball.vy;
   ball.vx *= 0.98;
   ball.vy *= 0.98;
+
+  // hole detection
+  const dx = ball.x - 150;
+  const dy = ball.y - 550;
+  const dist = Math.sqrt(dx * dx + dy * dy);
+
+  if (dist < 10) {
+    ball.vx = ball.vy = 0;
+    ball.x = 150;
+    ball.y = 100;
+  }
 }
 
 function draw() {
