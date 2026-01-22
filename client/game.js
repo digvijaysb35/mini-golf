@@ -77,11 +77,17 @@ function draw() {
     ctx.stroke();
   }
 
-  // ball
-  ctx.fillStyle = "black";
-  ctx.beginPath();
-  ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
-  ctx.fill();
+  // hole
+ctx.fillStyle = "black";
+ctx.beginPath();
+ctx.arc(150, 550, 10, 0, Math.PI * 2);
+ctx.fill();
+
+// ball
+ctx.fillStyle = "white";
+ctx.beginPath();
+ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
+ctx.fill();
 }
 
 function loop() {
