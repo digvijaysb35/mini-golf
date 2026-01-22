@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Mini Golf Multiplayer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div id="home">
+  <h2>Mini Golf</h2>
+  <input id="nameInput" placeholder="Your name" />
+  <button onclick="createRoom()">Create Room</button>
+  <input id="roomInput" placeholder="Room Code" />
+  <button onclick="joinRoom()">Join Room</button>
+</div>
+
+<div id="lobby" class="hidden">
+  <h3 id="roomCode"></h3>
+  <p id="players"></p>
+  <p>Waiting for players…</p>
+</div>
+
+<canvas id="gameCanvas" width="300" height="600" class="hidden"></canvas>
+<p id="turnInfo"></p>
+
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<script src="socket.js"></script>
+<script src="ui.js"></script>
+<script src="game.js"></script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+body {
+  font-family: Arial;
+  text-align: center;
+  background: #2ecc71;
+}
+
+.hidden {
+  display: none;
+}
+
+canvas {
+  background: #6ab04c;
+  margin: 10px auto;
+  display: block;
+  border: 2px solid #333;
+}
+
+input, button {
+  padding: 10px;
+  margin: 5px;
+  width: 80%;
+}
